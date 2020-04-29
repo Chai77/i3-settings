@@ -159,6 +159,7 @@ for_window [class=".*"] border pixel 0
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 
@@ -224,18 +225,19 @@ bindsym $mod+d exec bash /home/chaitanyae/dmenu.sh
 
 exec compton
 
-exec --no-startup-id i3-msg "workspace $ws2; append_layout /home/chaitanyae/i3-layouts/real-ws2.json"
 exec --no-startup-id i3-msg "workspace $ws1; append_layout /home/chaitanyae/i3-layouts/real-ws1.json"
 
-exec st -n neofetch -e zsh -c "neofetch && zsh"
-exec st -n htop -e htop
-exec st -n ranger -e ranger
+
+exec --no-startup-id i3-msg "workspace $ws2; append_layout /home/chaitanyae/i3-layouts/real-ws2.json"
 
 exec code
 exec firefox
+
+exec st -n neofetch -e zsh -c "neofetch && zsh"
+exec st -n ranger -e ranger
+exec st -n htop -e htop
 
 exec_always feh --bg-scale /home/chaitanyae/Pictures/wallpaper.jpg
 exec --no-startup-id clipit
 
 exec_always xrandr --output DP-0 --off --output DP-1 --off --output DP-2 --off --output DP-3 --off --output HDMI-0 --gamma 1:1:1 --mode 1920x1080 --pos 0x0 --rotate normal --output DP-4 --off --output DP-5 --off 
-
