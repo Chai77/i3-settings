@@ -12,6 +12,7 @@
 set $mod Mod4
 set $shutdown sudo -A shutdown -h now
 set $hibernate sudo -A systemctl suspend
+set $term --no-startup-id alacritty 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
 font pango:System San Francisco Display 13
@@ -42,7 +43,7 @@ exec --no-startup-id nm-applet
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec st 
+bindsym $mod+Return exec $term 
 
 # kill focused window
 bindsym $mod+q kill
@@ -79,10 +80,10 @@ bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
 #opening applications
-bindsym $mod+i exec st -n htop -e htop
-bindsym $mod+m exec st -n ranger -e ranger
-bindsym $mod+n exec st -n neofetch -e zsh -c "neofetch && zsh"
-bindsym $mod+y exec st -n ncmpcpp -e ncmpcpp
+bindsym $mod+i exec $term -t htop -e htop
+bindsym $mod+m exec $term -t ranger -e ranger
+bindsym $mod+n exec $term -t neofetch -e zsh -c "neofetch && zsh"
+bindsym $mod+y exec $term -t ncmpcpp -e ncmpcpp
 
 # split in horizontal orientation
 bindsym $mod+p split h
@@ -274,19 +275,19 @@ exec firefox
 
 # neofetch and terminal
 
-exec st -n neofetch -e zsh -c "neofetch && zsh"
+exec $term -t neofetch -e zsh -c "neofetch && zsh"
 
 # ranger
 
-exec st -n ranger -e ranger
+exec $term -t ranger -e ranger
 
 # htop
 
-exec st -n htop -e htop
+exec $term -t htop -e htop
 
 # music
 
-exec st -n ncmpcpp -e ncmpcpp
+exec $term -t ncmpcpp -e ncmpcpp
 
 # double monitor setup command: Not using so commented
 # background
