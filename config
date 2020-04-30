@@ -204,6 +204,9 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+# keybinding to access i3-layout-manager and add or save layouts
+bindsym $mod+Shift+Return exec i3-layout-manager
+
 # Start i3bar to display a workspace bar (plus the 
 # finds out, if available)
 
@@ -236,11 +239,17 @@ bar {
 	position top
 }
 
+# i3-gaps
+gaps inner 10
+gaps outer 0
+smart_gaps on
+
 bindsym $mod+shift+x exec i3lock --color "$bg-color"
 
 bindsym $mod+d exec dmenu_run -l 20
 
 # Runs mpd if it is not already running
+
 exec bash /home/chaitanyae/i3-scripts/mpd-script.sh 
 
 #ws1 layout
