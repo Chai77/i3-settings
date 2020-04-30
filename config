@@ -10,7 +10,8 @@
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
 set $mod Mod4
-
+set $shutdown sudo -A shutdown -h now
+set $hibernate sudo -A systemctl suspend
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
 font pango:System San Francisco Display 13
@@ -170,7 +171,12 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'" 
+bindsym $mod+Shift+e exec --no-startup-id prompt "Exit i3?" "i3-msg exit"
+# shutdown computer from i3 with dmenu prompt
+bindsym $mod+Shift+Escape exec --no-startup-id prompt "Shutdown computer?" "$shutdown"
+# "$shutdown"
+# hibernate
+bindsym $mod+F4 exec --no-startup-id prompt "Hibernate computer?" "$hibernate"
 # resize window (you can also use the mouse for that)
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
@@ -232,7 +238,7 @@ bar {
 
 bindsym $mod+shift+x exec i3lock --color "$bg-color"
 
-bindsym $mod+d exec bash /home/chaitanyae/dmenu.sh
+bindsym $mod+d exec dmenu_run -l 20
 
 # Runs mpd if it is not already running
 exec bash /home/chaitanyae/i3-scripts/mpd-script.sh 
