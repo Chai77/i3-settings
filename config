@@ -8,6 +8,7 @@
 # i3 config file (v4)
 #
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
+set $terminal_name "alacritty"
 
 set $mod Mod4
 set $shutdown sudo -A shutdown -h now
@@ -34,10 +35,9 @@ exec --no-startup-id nm-applet
 
 # Use pactl to adjust volume in PulseAudio.
  set $refresh_i3status killall -SIGUSR1 i3status
- bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
- bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
- bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
- bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+ bindsym XF86AudioRaiseVolume exec --no-startup-id volume up 10 
+ bindsym XF86AudioLowerVolume exec --no-startup-id volume down 10
+ bindsym XF86AudioMute exec --no-startup-id volume toggle-mute 
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -80,10 +80,13 @@ bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
 #opening applications
+bindsym $mod+b exec bash emoji.sh
 bindsym $mod+i exec $term -t htop -e htop
 bindsym $mod+m exec $term -t ranger -e ranger
 bindsym $mod+n exec $term -t neofetch -e zsh -c "neofetch && zsh"
 bindsym $mod+y exec $term -t ncmpcpp -e ncmpcpp
+bindsym $mod+o exec $term -t neomutt -e neomutt
+bindsym $mod+Shift+s exec bash record.sh
 
 # split in horizontal orientation
 bindsym $mod+p split h
@@ -118,13 +121,13 @@ bindsym $mod+a focus parent
 # We use variables to avoid repeating the names in multiple places.
 set $ws1 "1: Terminals "
 set $ws2 "2: Code "
-set $ws3 "3: Android "
-set $ws4 "4: Video editing "
-set $ws5 "5: Image editing "
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
 set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
-set $ws9 "9"
+set $ws9 "9: Mail "
 set $ws10 "10: Music "
 
 # switch to workspace
@@ -154,7 +157,7 @@ bindsym $mod+Shift+0 move container to workspace $ws10
 assign [class="kdenlive"] $ws4
 assign [class="Gimp"] $ws5
 assign [class="Inkscape"] $ws5
-for_window [class=".*"] border pixel 0
+for_window [class="^.*"] border pixel 4
 
 
 # For advancing forward/backward in an mpd song
@@ -172,7 +175,7 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec --no-startup-id prompt "Exit i3?" "i3-msg exit"
+bindsym $mod+Shift+e exec --no-startup-id prompt "Exit i3?" exit-i3
 # shutdown computer from i3 with dmenu prompt
 bindsym $mod+Shift+Escape exec --no-startup-id prompt "Shutdown computer?" "$shutdown"
 # "$shutdown"
@@ -217,7 +220,9 @@ set $text-color          #f3f4f5
 set $inactive-text-color #676E7D
 set $urgent-bg-color     #E53935
 
-set $active-border #98abb8 
+# set $active-border #98abb8 
+
+set $active-border #00ff00 
 set $inactive-border #2f343f 
 
 # window colors
@@ -226,10 +231,10 @@ client.focused          $active-border     $bg-color          $text-color       
 client.unfocused        $inactive-border   $inactive-bg-color $inactive-text-color #00ff00
 client.focused_inactive $inactive-border   $inactive-bg-color $inactive-text-color #00ff00
 client.urgent           $urgent-bg-color   $urgent-bg-color   $text-color          #00ff00
-
 bar {
-  	status_command i3blocks -c ~/.config/i3/i3blocks.conf
-	colors {
+  	status_command i3blocks 
+    font pango:System San Francisco Display 10
+  colors {
 		background $bg-color
 	    	separator #757575
 		#                  border             background         text
@@ -245,6 +250,13 @@ gaps inner 10
 gaps outer 0
 smart_gaps on
 
+new_window none
+
+hide_edge_borders smart
+
+default_border pixel 4
+default_floating_border pixel 4
+
 bindsym $mod+shift+x exec i3lock --color "$bg-color"
 
 bindsym $mod+d exec dmenu_run -l 20
@@ -252,10 +264,12 @@ bindsym $mod+d exec dmenu_run -l 20
 # Runs mpd if it is not already running
 
 exec bash /home/chaitanyae/i3-scripts/mpd-script.sh 
+exec mpc-update-module
+exec bash cpu_update.sh
 
 #ws1 layout
 
-exec --no-startup-id i3-msg "workspace $ws1; append_layout /home/chaitanyae/i3-layouts/real-ws1.json"
+exec --no-startup-id i3-msg "workspace $ws1; append_layout /home/chaitanyae/i3-layouts/real-$terminal_name-ws1.json"
 
 # ws2 layout
 
@@ -263,7 +277,11 @@ exec --no-startup-id i3-msg "workspace $ws2; append_layout /home/chaitanyae/i3-l
 
 # ws10 layout
 
-exec --no-startup-id i3-msg "workspace $ws10; append_layout /home/chaitanyae/i3-layouts/real-ws10.json"
+exec --no-startup-id i3-msg "workspace $ws10; append_layout /home/chaitanyae/i3-layouts/real-$terminal_name-ws10.json"
+
+# ws9 layout
+
+exec --no-startup-id i3-msg "workspace $ws9; append_layout /home/chaitanyae/i3-layouts/real-$terminal_name-ws9.json"
 
 # vs code
 
@@ -289,6 +307,10 @@ exec $term -t htop -e htop
 
 exec $term -t ncmpcpp -e ncmpcpp
 
+# mail
+
+exec $term -t neomutt -e neomutt
+
 # double monitor setup command: Not using so commented
 # background
 
@@ -300,5 +322,4 @@ exec --no-startup-id clipit
 
 # Transparency
 
-exec compton
-
+exec --no-startup-id compton --config /home/chaitanyae/.config/picom.conf
